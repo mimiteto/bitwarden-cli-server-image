@@ -1,8 +1,8 @@
-#!/bin/bash
+#! /bin/bash
 
 set -e
-set -o pipefail
 set -u
+set -o pipefail
 
 HOSTNAME_FILE=/etc/bitwarden/host
 USER_FILE=/etc/bitwarden/user
