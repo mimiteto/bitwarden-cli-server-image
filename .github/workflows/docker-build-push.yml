@@ -9,10 +9,12 @@ on:
       - closed
     branches:
       - main
+
   pull_request_target:
     types:
       - opened
       - synchronize
+
 
 jobs:
   build-and-push:
@@ -30,10 +32,12 @@ jobs:
         id: extract-branch
         run: echo "::set-output name=pr_branch::$(echo ${{ github.head_ref }} | cut -c 1-8)"
 
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
       - name: Build and push Docker image
+
         if: github.event_name == 'push' || github.event_name == 'pull_request' && github.event.action == 'closed'
         uses: docker/build-push-action@v2
         with:
@@ -48,13 +52,14 @@ jobs:
 
       - name: Build and push Docker image with version and PR branch tag
         if: github.event_name == 'pull_request' && github.event.action != 'closed' || github.event_name == 'pull_request_target' && github.event.action != 'closed'
+
         uses: docker/build-push-action@v2
         with:
           context: ./path/to/your/dir
           push: true
           build-args: |
             BW_CLI_VERSION=${{ steps.version.outputs.version }}
-          tags: ghcr.io/${{ github.repository_owner }}/your-image-name:${{ steps.version.outputs.version }}-${{ steps.extract-branch.outputs.pr_branch }}
+          tags: ghcr.io/${{ github.repository_owner }}/your-image-name:${{ steps.version.outputs.version }}${{ steps.extract-branch.outputs.pr_branch }}
         env:
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
