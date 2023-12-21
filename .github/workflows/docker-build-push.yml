@@ -34,6 +34,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Read scripts version from file
+        id: scripts-version
+        run: echo "::set-output name=version::$(cat SCRIPTS_VERSION)"
+
       - name: Read version from file
         id: version
         run: echo "::set-output name=version::$(cat VERSION)"
@@ -57,7 +61,7 @@ jobs:
           push: true
           build-args: |
             BW_CLI_VERSION=${{ steps.version.outputs.version }}
-          tags: ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}-${{ steps.scripts-version.outputs.version }}
         env:
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
@@ -71,7 +75,7 @@ jobs:
           push: true
           build-args: |
             BW_CLI_VERSION=${{ steps.version.outputs.version }}
-          tags: ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}-${{ github.run_number }}
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}-${{ steps.scripts-version.outputs.version }}-${{ github.run_number }}
         env:
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
