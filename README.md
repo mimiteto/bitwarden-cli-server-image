@@ -12,3 +12,13 @@ Image expects that there are 3 files within the `/etc/bitwarden` directory, each
 
 Image allows for configuration for the host/port via env variables (BW_HOST/BW_PORT) and will default to `0.0.0.0:8087`
 
+## Helm chart
+
+Helm chart will ease your deployment.
+Consider inspecting it, inspecting the image build scripts and then build your image.
+Overall, be cautios, as those scripts have direct access to your credentials.
+
+To install the chart, clone the current repository, then run:
+```
+helm upgrade --install my-bitwarden-cli deployment/bitwarden-cli-srv
+```

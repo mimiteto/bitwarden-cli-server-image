@@ -1,0 +1,16 @@
+Congratulations, your bitwarden-cli is now up and running!
+To access it:
+{{- if .Values.ingress.enabled }}
+* From outside of your cluster:
+  {{- range $host := .Values.ingress.hosts }}
+    {{- range .paths }}
+  - https://{{ $host.host }}{{ .path }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+* From within your cluster:
+  - http://{{ include "bitwarden-cli-srv.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:8087
+Official documentation for the Bitwarden CLI - https://bitwarden.com/help/cli/
+Source - https://external-secrets.io/main/examples/bitwarden/
+Additional configuration options for the image - https://github.com/mimiteto/bitwarden-cli-server-image
+

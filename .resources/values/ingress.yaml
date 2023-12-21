@@ -1,0 +1,13 @@
+---
+connectionSecretName: operator-created-secret
+ingress:
+  enabled: true
+  className: "ingress-1"
+  annotations:
+    test: annotation
+  hosts:
+    - host: chart-example.local
+  tls:
+    - secretName: chart-example-tls
+      hosts:
+        - chart-example.local
