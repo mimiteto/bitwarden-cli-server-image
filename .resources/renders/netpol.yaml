@@ -1,0 +1,130 @@
+---
+# Source: bitwarden-cli-srv/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: release-name-bitwarden-cli-srv
+  labels:
+    helm.sh/chart: bitwarden-cli-srv-0.1.0
+    app.kubernetes.io/name: bitwarden-cli-srv
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "2023.12.1"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: bitwarden-cli-srv/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-name-bitwarden-cli-srv
+  labels:
+    helm.sh/chart: bitwarden-cli-srv-0.1.0
+    app.kubernetes.io/name: bitwarden-cli-srv
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "2023.12.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: "8087"
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: bitwarden-cli-srv
+    app.kubernetes.io/instance: release-name
+---
+# Source: bitwarden-cli-srv/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-bitwarden-cli-srv
+  labels:
+    helm.sh/chart: bitwarden-cli-srv-0.1.0
+    app.kubernetes.io/name: bitwarden-cli-srv
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "2023.12.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bitwarden-cli-srv
+      app.kubernetes.io/instance: release-name
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bitwarden-cli-srv
+        app.kubernetes.io/instance: release-name
+    spec:
+      serviceAccountName: release-name-bitwarden-cli-srv
+      securityContext:
+        {}
+      containers:
+        - name: bitwarden-cli-srv
+          securityContext:
+            {}
+          image: "docker pull ghcr.io/mimiteto/bitwarden-cli-server-image:2023.12.1"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: "8087"
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - curl
+                - -X
+                - POST
+                - -d
+                - ''
+                - http://127.0.0.1:8087/sync
+            initialDelaySeconds: 20
+            failureThreshold: 3
+            timeoutSeconds: 1
+            periodSeconds: 120
+          readinessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 20
+            failureThreshold: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 10
+            failureThreshold: 30
+            timeoutSeconds: 1
+            periodSeconds: 5
+          resources:
+            {}
+          volumeMounts:
+            - name: credentials
+              readOnly: true
+              mountPath: /etc/bitwarden
+      volumes: 
+        - name: credentials
+          secret:
+            secretName: operator-created-secret
+            defaultMode: 0444
+---
+# Source: bitwarden-cli-srv/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "release-name-bitwarden-cli-srv-test-connection"
+  labels:
+    helm.sh/chart: bitwarden-cli-srv-0.1.0
+    app.kubernetes.io/name: bitwarden-cli-srv
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "2023.12.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['release-name-bitwarden-cli-srv:8087']
+  restartPolicy: Never

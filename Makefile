@@ -1,0 +1,23 @@
+
+
+.PHONY: sync-helm
+sync-helm:
+	@sed -i 's/appVersion: .*/appVersion: "$(shell cat VERSION)"/g' deployment/bitwarden-cli-srv/Chart.yaml
+
+.PHONY: template-helm
+template-helm: sync-helm
+	helm template deployment/bitwarden-cli-srv --set connectionSecretName=operator-created-secret
+
+.PHONY: test-helm
+test-helm: sync-helm
+	@echo "Testing Default values"
+	@helm template deployment/bitwarden-cli-srv -f .resources/values/default.yaml > .resources/renders/default.yaml
+	@echo "Diff for default values:"
+	@git diff .resources/renders/default.yaml
+	@echo "Testing deployment with ingress values"
+	@helm template deployment/bitwarden-cli-srv -f .resources/values/ingress.yaml > .resources/renders/ingress.yaml
+	@echo "Diff for ingress values"
+	@git diff .resources/renders/ingress.yaml
+	@echo "Testing deployment with netpol values"
+	@helm template deployment/bitwarden-cli-srv -f .resources/values/netpol.yaml > .resources/renders/netpol.yaml
+	@git diff .resources/renders/netpol.yaml
