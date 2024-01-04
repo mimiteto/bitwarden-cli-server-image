@@ -7,7 +7,7 @@ This repo simply follows the example from https://external-secrets.io/main/examp
 
 Image expects that there are 3 files within the `/etc/bitwarden` directory, each having only one line:
 * host: file should contain the base URL to your vault instance
-* username: file should contain your bitwarden user
+* user: file should contain your bitwarden user
 * password: file should contain your bitwarden password
 
 Image allows for configuration for the host/port via env variables (BW_HOST/BW_PORT) and will default to `0.0.0.0:8087`
@@ -16,7 +16,7 @@ Image allows for configuration for the host/port via env variables (BW_HOST/BW_P
 
 Helm chart will ease your deployment.
 Consider inspecting it, inspecting the image build scripts and then build your image.
-Overall, be cautios, as those scripts have direct access to your credentials.
+Overall, be cautious, as those scripts have direct access to your credentials.
 
 To install the chart, clone the current repository, then run:
 ```
