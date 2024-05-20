@@ -1,0 +1,41 @@
+{{- if .Values.k8sRBAC.enabled }}
+---
+# RBAC proxy access
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "bitwarden-cli-srv.fullname" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "bitwarden-cli-srv.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "bitwarden-cli-srv.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "bitwarden-cli-srv.fullname" . }}
+rules:
+- apiGroups: ["authentication.k8s.io"]
+  resources:
+  - tokenreviews
+  verbs: ["create"]
+- apiGroups: ["authorization.k8s.io"]
+  resources:
+  - subjectaccessreviews
+  verbs: ["create"]
+{{- end }}
+{{- if .Values.k8sRBAC.enabled }}
+---
+# RBAC client access
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "bitwarden-cli-srv.rbac-client" . }}
+rules:
+- nonResourceURLs: ["/object"]
+  verbs: ["*"]
+{{- end }}

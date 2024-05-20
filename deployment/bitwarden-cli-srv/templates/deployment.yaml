@@ -33,10 +33,16 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.k8sRBAC.enabled }}
           ports:
             - name: http
               containerPort: 8087
               protocol: TCP
+          {{- else }}
+          env:
+            - name: BW_HOST
+              value: "127.0.0.1"
+          {{- end }}
           livenessProbe:
             exec:
               command:
@@ -70,6 +76,20 @@ spec:
             - name: credentials
               readOnly: true
               mountPath: /etc/bitwarden
+        {{ if .Values.k8sRBAC.enabled -}}
+        - name: kube-rbac-proxy
+          securityContext:
+            {{- toYaml .Values.k8sRBAC.securityContext | nindent 12 }}
+          image: "{{ .Values.k8sRBAC.image.repository }}:{{ .Values.k8sRBAC.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8087
+              protocol: TCP
+          args: {{- toYaml .Values.k8sRBAC.args | nindent 12 }}
+          resources:
+            {{- toYaml .Values.k8sRBAC.resources | nindent 12 }}
+        {{ end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

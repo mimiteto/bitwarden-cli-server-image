@@ -24,6 +24,23 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+Provide name for bw-cli client cluster role
+*/}}
+{{- define "bitwarden-cli-srv.rbac-client" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 56 }}-client
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 56 }}-client
+{{- else }}
+{{- printf "%s-%s-client" .Release.Name $name | trunc 56 }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "bitwarden-cli-srv.chart" -}}

@@ -9,7 +9,7 @@ sync-helm:
 
 .PHONY: template-helm
 template-helm: sync-helm
-	helm template deployment/bitwarden-cli-srv --set connectionSecretName=operator-created-secret
+	helm template deployment/bitwarden-cli-srv --set connectionSecretName=operator-created-secret --set k8sRBAC.enabled=true
 
 .PHONY: test-helm
 test-helm: sync-helm
