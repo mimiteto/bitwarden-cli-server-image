@@ -4,4 +4,4 @@ name: bitwarden-cli-srv
 description: A Helm chart to deploy the bitwarden cli in server mode
 type: application
 version: "0.1.0"
-appVersion: "2024.3.1-0.1.0"
+appVersion: "2024.9.0-0.1.0"

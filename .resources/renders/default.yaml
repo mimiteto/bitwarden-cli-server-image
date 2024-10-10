@@ -8,7 +8,7 @@ metadata:
     helm.sh/chart: bitwarden-cli-srv-0.1.0
     app.kubernetes.io/name: bitwarden-cli-srv
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "2023.12.1"
+    app.kubernetes.io/version: "2024.9.0-0.1.0"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: bitwarden-cli-srv/templates/service.yaml
@@ -20,12 +20,12 @@ metadata:
     helm.sh/chart: bitwarden-cli-srv-0.1.0
     app.kubernetes.io/name: bitwarden-cli-srv
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "2023.12.1"
+    app.kubernetes.io/version: "2024.9.0-0.1.0"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
   ports:
-    - port: "8087"
+    - port: 8087
       targetPort: http
       protocol: TCP
       name: http
@@ -42,7 +42,7 @@ metadata:
     helm.sh/chart: bitwarden-cli-srv-0.1.0
     app.kubernetes.io/name: bitwarden-cli-srv
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "2023.12.1"
+    app.kubernetes.io/version: "2024.9.0-0.1.0"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -60,14 +60,14 @@ spec:
       securityContext:
         {}
       containers:
-        - name: bitwarden-cli-srv
+        - name: bitwarden-cli
           securityContext:
             {}
-          image: "docker pull ghcr.io/mimiteto/bitwarden-cli-server-image:2023.12.1"
+          image: "ghcr.io/mimiteto/bitwarden-cli-server-image:2024.9.0-0.1.0"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: "8087"
+              containerPort: 8087
               protocol: TCP
           livenessProbe:
             exec:
@@ -117,7 +117,7 @@ metadata:
     helm.sh/chart: bitwarden-cli-srv-0.1.0
     app.kubernetes.io/name: bitwarden-cli-srv
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "2023.12.1"
+    app.kubernetes.io/version: "2024.9.0-0.1.0"
     app.kubernetes.io/managed-by: Helm
   annotations:
     "helm.sh/hook": test
