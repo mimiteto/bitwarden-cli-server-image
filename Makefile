@@ -2,6 +2,8 @@ CHART_DIR := deployment/bitwarden-cli-srv
 USERNAME := mimiteto
 REPO_NAME := bitwarden-cli-server-image
 
+# TODO: Handle container builds here
+
 .PHONY: sync-helm
 sync-helm:
 	@sed -i 's/^appVersion: .*/appVersion: "$(shell cat VERSION)-$(shell cat SCRIPTS_VERSION)"/g' deployment/bitwarden-cli-srv/Chart.yaml

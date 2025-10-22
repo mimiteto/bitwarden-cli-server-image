@@ -1,11 +1,13 @@
 name: Build and Push Docker Image
 
+# TODO: Move build to a script image
+
 on:
   push:
     branches:
       - master
     tags:
-      - '*'
+      - "*"
   pull_request:
     types:
       - closed
