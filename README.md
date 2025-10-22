@@ -12,6 +12,30 @@ Image expects that there are 3 files within the `/etc/bitwarden` directory, each
 
 Image allows for configuration for the host/port via env variables (BW_HOST/BW_PORT) and will default to `0.0.0.0:8087`
 
+You can build and run with:
+
+```bash
+export IMAGE_NAME="bitwarden-cli-srv:latest"
+docker build -t "${IMAGE_NAME}" -f ./container/Dockerfile ./container
+docker run -ti --rm -p 8087:8087 \
+    -v /tmp/bitwarden-clientid:/etc/bitwarden/clientid \
+    -v /tmp/bitwarden-clientsecret:/etc/bitwarden/clientsecret \
+    -v /tmp/bitwarden-host:/etc/bitwarden/host \
+    -v /tmp/bitwarden-password:/etc/bitwarden/password \
+    ${IMAGE_NAME}
+```
+or
+```bash
+export IMAGE_NAME="bitwarden-cli-srv:latest"
+docker build -t "${IMAGE_NAME}" -f ./container/Dockerfile ./container
+docker run -ti --rm -p 8087:8087 \
+    -v /tmp/bitwarden-host:/etc/bitwarden/host \
+    -v /tmp/bitwarden-user:/etc/bitwarden/user \
+    -v /tmp/bitwarden-password:/etc/bitwarden/password \
+    ${IMAGE_NAME}
+
+```
+
 ## Helm chart
 
 Helm chart will ease your deployment.
