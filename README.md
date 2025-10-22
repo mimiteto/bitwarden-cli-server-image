@@ -1,11 +1,13 @@
 # Bitwarden CLI Server Image
 
-This repo simply follows the example from https://external-secrets.io/main/examples/bitwarden/
+This repo simply follows the example from [the ESO example](https://external-secrets.io/main/examples/bitwarden/)
 
 ## Container image
+
 [![Build and Push Docker Image](https://github.com/mimiteto/bitwarden-cli-server-image/actions/workflows/docker-build-push.yml/badge.svg?branch=master)](https://github.com/mimiteto/bitwarden-cli-server-image/actions/workflows/docker-build-push.yml)
 
 Image expects that there are 3 files within the `/etc/bitwarden` directory, each having only one line:
+
 * host: file should contain the base URL to your vault instance
 * user: file should contain your bitwarden user
 * password: file should contain your bitwarden password
@@ -24,7 +26,9 @@ docker run -ti --rm -p 8087:8087 \
     -v /tmp/bitwarden-password:/etc/bitwarden/password \
     ${IMAGE_NAME}
 ```
+
 or
+
 ```bash
 export IMAGE_NAME="bitwarden-cli-srv:latest"
 docker build -t "${IMAGE_NAME}" -f ./container/Dockerfile ./container
@@ -33,7 +37,6 @@ docker run -ti --rm -p 8087:8087 \
     -v /tmp/bitwarden-user:/etc/bitwarden/user \
     -v /tmp/bitwarden-password:/etc/bitwarden/password \
     ${IMAGE_NAME}
-
 ```
 
 ## Helm chart
@@ -43,6 +46,7 @@ Consider inspecting it, inspecting the image build scripts and then build your i
 Overall, be cautious, as those scripts have direct access to your credentials.
 
 To install the chart, clone the current repository, then run:
-```
+
+```bash
 helm upgrade --install my-bitwarden-cli deployment/bitwarden-cli-srv
 ```
