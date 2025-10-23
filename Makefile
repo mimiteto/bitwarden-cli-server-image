@@ -1,8 +1,11 @@
 CHART_DIR := deployment/bitwarden-cli-srv
 USERNAME := mimiteto
 REPO_NAME := bitwarden-cli-server-image
+CONTAINER_REPO_NAME := ghcr.io/$(USERNAME)/$(REPO_NAME)
 
-# TODO: Handle container builds here
+.PHONY: container-build
+container-build:
+	docker build -t ghcr.io/$(USERNAME)/$(REPO_NAME):$(shell cat VERSION)-$(shell cat SCRIPTS_VERSION) -f container/Dockerfile container/
 
 .PHONY: sync-helm
 sync-helm:

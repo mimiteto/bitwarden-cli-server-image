@@ -1,8 +1,6 @@
 ARG BW_CLI_VERSION=2024.2.0
 ARG DEBIAN_VERSION=12-slim
 
-#TODO: Include architecture
-
 FROM debian:${DEBIAN_VERSION} AS base
 RUN apt-get update && apt-get install -y curl
 
