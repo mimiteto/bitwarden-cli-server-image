@@ -37,5 +37,5 @@ jobs:
           body: |
             Updates Bitwarden CLI version to the latest release.
 
-            - Release: https://github.com/bitwarden/clients/releases/tag/${{ steps.latest-release.outputs.version }}
+            - Release: [${{ steps.latest-release.outputs.version }}](https://github.com/bitwarden/clients/releases/tag/cli-v${{ steps.latest-release.outputs.version }})
           branch: update-bitwarden-cli/${{ steps.latest-release.outputs.version }}
