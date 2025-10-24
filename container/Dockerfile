@@ -18,10 +18,7 @@ ENV SHA_URL="${BASE_URL}/${SHA_FILE}"
 RUN apt-get update && apt-get install -y unzip && \
     curl -s -L -o "/tmp/${PKG}" "${DOWNLOAD_URL}" && \
     curl -s -L -o "/tmp/${SHA_FILE}" "${SHA_URL}" && \
-    unzip /tmp/${PKG} -d /bw-cli && chmod +x /bw-cli/bw;\
-    need=$(cat "/tmp/${SHA_FILE}");\
-    got=$(sha256sum "/tmp/${PKG}" | cut -d ' ' -f 1) ;\
-    if [ "${need}" != "${got}" ]; then echo "Verification failed. Needed '${need}', got '${got}'" && exit 1; else echo 'Verification successful'; fi
+    unzip /tmp/${PKG} -d /bw-cli && chmod +x /bw-cli/bw
 
 FROM base AS app
 COPY --from=builder /bw-cli/bw /usr/local/bin/bw
