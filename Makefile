@@ -2,6 +2,8 @@ CHART_DIR := deployment/bitwarden-cli-srv
 USERNAME := mimiteto
 REPO_NAME := bitwarden-cli-server-image
 CONTAINER_REPO_NAME := ghcr.io/$(USERNAME)/$(REPO_NAME)
+SCRIPTS_VERSION := $(shell cat SCRIPTS_VERSION)
+VERSION := $(shell cat VERSION)
 VERSION_TAG := $(shell cat VERSION)-$(shell cat SCRIPTS_VERSION)
 
 
@@ -21,7 +23,7 @@ container-build-and-push-multiarch:
 	docker buildx create --use --name multiarch-builder 2>/dev/null || docker buildx use multiarch-builder
 	docker buildx build \
 		--platform linux/amd64,linux/arm64 \
-		--build-arg BW_CLI_VERSION=$$(cat VERSION) \
+		--build-arg BW_CLI_VERSION=$(VERSION) \
 		--tag $(CONTAINER_REPO_NAME):$(VERSION_TAG) \
 		--push \
 		-f container/Dockerfile \
@@ -33,7 +35,7 @@ container-build-multiarch:
 	docker buildx create --use --name multiarch-builder 2>/dev/null || docker buildx use multiarch-builder
 	docker buildx build \
 		--platform linux/amd64,linux/arm64 \
-		--build-arg BW_CLI_VERSION=$(BW_CLI_VERSION) \
+		--build-arg BW_CLI_VERSION=$(VERSION) \
 		--tag $(CONTAINER_REPO_NAME):$(VERSION_TAG) \
 		-f container/Dockerfile \
 		container/
