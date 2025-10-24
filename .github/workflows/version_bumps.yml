@@ -18,13 +18,19 @@ jobs:
 
       - name: Get latest Bitwarden CLI release
         id: latest-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -sLo /tmp/output.json \
             --url https://api.github.com/repos/bitwarden/clients/releases/latest \
             --request GET \
             --header "X-GitHub-Api-Version: 2022-11-28" \
-            --header "Authorization: Bearer ${GITHUB_TOKEN}"
+            --header "Authorization: Bearer ${GITHUB_TOKEN}" \
+            --header "Accept: application/vnd.github+json"
           cat /tmp/output.json
+          if [ "$(jq -r .tag_name /tmp/output.json)" == "null" ]; then
+            exit 2
+          fi
           LATEST=$(jq -r .tag_name /tmp/output.json | cut -d v -f 2)
           echo ${LATEST} > ./VERSION
           echo "version=${LATEST}" >> $GITHUB_OUTPUT
