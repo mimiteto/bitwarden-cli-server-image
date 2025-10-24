@@ -3,6 +3,15 @@ USERNAME := mimiteto
 REPO_NAME := bitwarden-cli-server-image
 CONTAINER_REPO_NAME := ghcr.io/$(USERNAME)/$(REPO_NAME)
 
+
+.PHONY: help
+help:
+	@echo "Available make targets:"
+	@echo "  container-build   - Build the Docker container image with version tags."
+	@echo "  sync-helm         - Sync Helm chart versions with VERSION and SCRIPTS_VERSION files."
+	@echo "  template-helm     - Render Helm chart templates with synced versions."
+	@echo "  test-helm         - Test Helm chart rendering against predefined values files."
+
 .PHONY: container-build
 container-build:
 	docker build -t ghcr.io/$(USERNAME)/$(REPO_NAME):$(shell cat VERSION)-$(shell cat SCRIPTS_VERSION) -f container/Dockerfile container/
