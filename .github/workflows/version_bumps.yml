@@ -1,0 +1,35 @@
+name: Update Bitwarden CLI Version
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # Daily at 6 AM UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get latest Bitwarden CLI release
+        id: latest-release
+        run: |
+          LATEST=$(curl -s https://api.github.com/repos/bitwarden/clients/releases/latest | jq -r .tag_name)
+          echo ${LATEST} | cut -d v -f 2 > VERSION
+          echo "version=${LATEST}" | cut -d v -f 2 >> $GITHUB_OUTPUT
+
+      - name: Update Chart.yaml
+        run: make sync-helm
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update bitwarden CLI to ${{ steps.latest-release.outputs.version }}"
+          title: "Update Bitwarden CLI to ${{ steps.latest-release.outputs.version }}"
+          body: |
+            Updates Bitwarden CLI version to the latest release.
+
+            - Release: https://github.com/bitwarden/clients/releases/tag/${{ steps.latest-release.outputs.version }}
+          branch: update-bitwarden-cli/${{ steps.latest-release.outputs.version }}
