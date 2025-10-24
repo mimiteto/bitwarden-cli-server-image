@@ -65,7 +65,9 @@ affinity: {}
 
 # Connection secret name.
 # Needs to be within the same namespace.
-# Needs to have 3 keys - host, user, password
+# Needs to have either:
+# 3 keys - host, user, password
+# 4 keys - host, clientid, clientsecret, password
 connectionSecretName: ""
 
 networkPolicyPodSelectors: []
