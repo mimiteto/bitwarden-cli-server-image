@@ -19,9 +19,11 @@ jobs:
       - name: Get latest Bitwarden CLI release
         id: latest-release
         run: |
-          LATEST=$(curl -s https://api.github.com/repos/bitwarden/clients/releases/latest | jq -r .tag_name)
-          echo ${LATEST} | cut -d v -f 2 > ./VERSION
-          echo "version=$(echo "${LATEST}" | cut -d v -f 2)" >> $GITHUB_OUTPUT
+          curl -sL https://api.github.com/repos/bitwarden/clients/releases/latest -o /tmp/output.json
+          cat /tmp/output.json
+          LATEST=$(jq -r .tag_name /tmp/output.json | cut -d v -f 2)
+          echo ${LATEST} > ./VERSION
+          echo "version=${LATEST}" >> $GITHUB_OUTPUT
 
       - name: Update Chart.yaml
         run: make sync-helm
