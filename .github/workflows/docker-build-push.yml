@@ -36,10 +36,10 @@ jobs:
       - name: Get tag
         id: get-image-tag
         run: |
-          if [ "$(git branch --show-current)" == "master" ]; then
-            echo "tag=$(cat VERSION)-$(cat SCRIPTS_VERSION)" >> $GITHUB_OUTPUT
-          else
+          if [ "$(git branch --show-current)" != "master" ]; then
             echo "tag=$(cat VERSION)-$(cat SCRIPTS_VERSION)-$(git branch --show-current)" >> $GITHUB_OUTPUT
+          else
+            echo "tag=$(cat VERSION)-$(cat SCRIPTS_VERSION)" >> $GITHUB_OUTPUT
           fi
 
       - name: Log into registry ${{ env.REGISTRY }}
