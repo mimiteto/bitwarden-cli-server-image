@@ -5,6 +5,8 @@ This repo simply follows the example from [the ESO example](https://external-sec
 ## Container image
 
 [![Build and Push Docker Image](https://github.com/mimiteto/bitwarden-cli-server-image/actions/workflows/docker-build-push.yml/badge.svg?branch=master)](https://github.com/mimiteto/bitwarden-cli-server-image/actions/workflows/docker-build-push.yml)
+[![Update Bitwarden CLI Version](https://github.com/mimiteto/bitwarden-cli-server-image/actions/workflows/version_bumps.yml/badge.svg)](https://github.com/mimiteto/bitwarden-cli-server-image/actions/workflows/version_bumps.yml)
+[![Helm Lint](https://github.com/mimiteto/bitwarden-cli-server-image/actions/workflows/helm-linting.yml/badge.svg)](https://github.com/mimiteto/bitwarden-cli-server-image/actions/workflows/helm-linting.yml)
 
 Image expects that there are 3 files within the `/etc/bitwarden` directory, each having only one line:
 
