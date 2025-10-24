@@ -1,6 +1,42 @@
 CHART_DIR := deployment/bitwarden-cli-srv
 USERNAME := mimiteto
 REPO_NAME := bitwarden-cli-server-image
+CONTAINER_REPO_NAME := ghcr.io/$(USERNAME)/$(REPO_NAME)
+
+
+.PHONY: help
+help:
+	@echo "Available make targets:"
+	@echo "  container-build--multiarch           - Build the Docker container image with version tags."
+	@echo "  container-build-and-push-multiarch   - Build the Docker container image with version tags."
+	@echo "  sync-helm                            - Sync Helm chart versions with VERSION and SCRIPTS_VERSION files."
+	@echo "  template-helm                        - Render Helm chart templates with synced versions."
+	@echo "  test-helm                            - Test Helm chart rendering against predefined values files."
+
+
+.PHONY: container-build-and-push-multiarch
+container-build-and-push-multiarch:
+	@echo "Building multi-architecture Docker image for platforms: linux/amd64,linux/arm64"
+	docker buildx create --use --name multiarch-builder 2>/dev/null || docker buildx use multiarch-builder
+	docker buildx build \
+		--platform linux/amd64,linux/arm64 \
+		--build-arg BW_CLI_VERSION=$(BW_CLI_VERSION) \
+		--tag $(CONTAINER_REPO_NAME):$(VERSION_TAG) \
+		--push \
+		-f container/Dockerfile \
+		container/
+
+.PHONY: container-build-multiarch
+container-build-multiarch:
+	@echo "Building multi-architecture Docker image for platforms: linux/amd64,linux/arm64"
+	docker buildx create --use --name multiarch-builder 2>/dev/null || docker buildx use multiarch-builder
+	docker buildx build \
+		--platform linux/amd64,linux/arm64 \
+		--build-arg BW_CLI_VERSION=$(BW_CLI_VERSION) \
+		--tag $(CONTAINER_REPO_NAME):$(VERSION_TAG) \
+		-f container/Dockerfile \
+		container/
+
 
 .PHONY: sync-helm
 sync-helm:
