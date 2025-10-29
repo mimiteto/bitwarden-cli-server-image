@@ -45,6 +45,7 @@ container-build-multiarch:
 sync-helm:
 	@sed -i 's/^appVersion: .*/appVersion: "$(shell cat VERSION)-$(shell cat SCRIPTS_VERSION)"/g' deployment/bitwarden-cli-srv/Chart.yaml
 	@sed -i 's/^version: .*/version: "$(shell cat SCRIPTS_VERSION)"/g' deployment/bitwarden-cli-srv/Chart.yaml
+	@sed -i 's/^ARG BW_CLI_VERSION=.*/ARG BW_CLI_VERSION=$(shell cat VERSION)/g' container/Dockerfile
 
 .PHONY: template-helm
 template-helm: sync-helm
