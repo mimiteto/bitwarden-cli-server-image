@@ -11,13 +11,10 @@ FROM base AS builder
 ARG BW_CLI_VERSION
 ENV BASE_URL="https://github.com/bitwarden/clients/releases/download/cli-v${BW_CLI_VERSION}"
 ENV PKG="bw-linux-${BW_CLI_VERSION}.zip"
-ENV SHA_FILE="bw-linux-sha256-${BW_CLI_VERSION}.txt"
 ENV DOWNLOAD_URL="${BASE_URL}/${PKG}"
-ENV SHA_URL="${BASE_URL}/${SHA_FILE}"
 
 RUN apt-get update && apt-get install -y unzip && \
     curl -s -L -o "/tmp/${PKG}" "${DOWNLOAD_URL}" && \
-    curl -s -L -o "/tmp/${SHA_FILE}" "${SHA_URL}" && \
     unzip /tmp/${PKG} -d /bw-cli && chmod +x /bw-cli/bw
 
 FROM base AS app
